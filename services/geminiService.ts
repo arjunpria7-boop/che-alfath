@@ -7,10 +7,22 @@ declare const process: {
   }
 };
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper to get AI instance safely
+const getAiClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("Gemini API Key is missing. AI features will use fallback responses.");
+    // Return null or a dummy object if you prefer, but handling null in callers is better
+    // For now, we will throw a controlled error or return a mock if needed.
+    // However, the library throws if apiKey is missing.
+    // We'll let the library throw but only when this function is called, not at module load.
+  }
+  return new GoogleGenAI({ apiKey: apiKey || 'DUMMY_KEY_TO_PREVENT_CRASH' });
+};
 
 export const generateCaptainMessage = async (name: string, amount: number, message: string): Promise<string> => {
   try {
+    const ai = getAiClient();
     const prompt = `
       Bertindaklah sebagai Kapten Kapal "Alfath Nusantara" yang kharismatik, bijaksana, dan berjiwa petualang.
       
@@ -37,6 +49,7 @@ export const generateCaptainMessage = async (name: string, amount: number, messa
 
 export const generateConstructionUpdate = async (currentAmount: number, targetAmount: number): Promise<string> => {
     try {
+        const ai = getAiClient();
         const percentage = (currentAmount / targetAmount) * 100;
         const prompt = `
           Tulis update singkat (1 paragraf pendek) tentang suasana pembangunan kapal "Alfath Nusantara".
