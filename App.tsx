@@ -33,7 +33,7 @@ const App: React.FC = () => {
     setTotalRaised(total);
 
     // Create simple chart data accumulation
-    const newChartData = donations.map((d, index) => ({
+    const newChartData = donations.map((_, index) => ({
         name: `Donatur ${index + 1}`,
         amount: donations.slice(0, index + 1).reduce((sum, item) => sum + item.amount, 0)
     }));

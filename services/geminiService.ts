@@ -1,5 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
-import { Donation } from "../types";
+
+// Declare process to avoid TS error because @types/node is not available
+declare const process: {
+  env: {
+    API_KEY: string;
+  }
+};
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
